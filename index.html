@@ -2,8 +2,10 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>兰曦的小窝</title>
+    <!-- 添加标签页图标 -->
+    <link rel="icon" href="images/icon.png" type="image/png">
     <!-- 引入Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- 引入Font Awesome -->
@@ -39,6 +41,9 @@
             .acrylic-hover {
                 @apply transition-all duration-300 hover:bg-white/20 hover:translate-y-[-5px] hover:shadow-xl;
             }
+            .touch-friendly {
+                @apply cursor-pointer;
+            }
         }
     </style>
 
@@ -46,6 +51,8 @@
         html,
         body {
             height: 100%;
+            touch-action: manipulation;
+            /* 优化触摸体验，防止双击缩放 */
         }
 
         body {
@@ -54,6 +61,8 @@
             background-position: center;
             display: flex;
             flex-direction: column;
+            overflow-x: hidden;
+            /* 防止横向滚动 */
         }
 
         /* 加载动画 */
@@ -94,7 +103,9 @@
             transition: opacity 0.3s ease;
         }
 
-        .avatar-container:hover::after {
+        .avatar-container:hover::after,
+        .avatar-container:active::after {
+            /* 增加触摸反馈 */
             opacity: 1;
         }
 
@@ -103,8 +114,28 @@
             transition: transform 0.3s ease;
         }
 
-        .link-icon:hover {
+        .link-icon:hover,
+        .link-icon:active {
+            /* 增加触摸反馈 */
             transform: scale(1.15) rotate(5deg);
+        }
+
+        /* 页脚样式调整 */
+        .page-footer {
+            margin-top: auto;
+            padding-bottom: 1rem;
+        }
+
+        /* 移动端适配调整 */
+        @media (max-width: 640px) {
+            .mobile-padding {
+                padding-left: 0.75rem !important;
+                padding-right: 0.75rem !important;
+            }
+
+            .time-display-mobile {
+                font-size: 2.5rem !important;
+            }
         }
     </style>
 </head>
@@ -113,18 +144,19 @@
     <!-- 遮罩层增强可读性 -->
     <div class="fixed inset-0 bg-black/30 z-0"></div>
 
-    <!-- 主容器：使用flex实现垂直居中 -->
-    <div class="container mx-auto px-4 py-6 relative z-10 flex-grow flex flex-col justify-center">
+    <!-- 主容器：使用flex实现垂直居中，增加移动端内边距 -->
+    <div
+        class="container mx-auto px-4 py-6 sm:py-10 relative z-10 flex-grow flex flex-col justify-center mobile-padding">
         <!-- 主内容区 -->
-        <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
+        <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
             <!-- 左侧个人信息区域 -->
             <div class="w-full lg:w-1/2">
-                <div class="acrylic rounded-3xl p-6 md:p-8 h-full acrylic-hover">
-                    <!-- 头像 -->
-                    <div class="avatar-container flex justify-center mb-8">
+                <div class="acrylic rounded-3xl p-5 sm:p-6 md:p-8 h-full acrylic-hover touch-friendly">
+                    <!-- 头像：调整移动端大小 -->
+                    <div class="avatar-container flex justify-center mb-6 sm:mb-8">
                         <div class="relative">
                             <img src="images/head.png" alt="404zero的头像"
-                                class="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover border-4 border-white/30 shadow-xl">
+                                class="w-32 sm:w-40 md:w-56 h-32 sm:h-40 md:h-56 rounded-full object-cover border-4 border-white/30 shadow-xl">
                             <!-- 装饰光环 -->
                             <div
                                 class="absolute -inset-1 rounded-full bg-gradient-to-r from-primary to-accent opacity-30 blur-xl">
@@ -132,18 +164,18 @@
                         </div>
                     </div>
 
-                    <!-- 名称 -->
-                    <div class="text-center mb-4">
+                    <!-- 名称：调整移动端字体大小 -->
+                    <div class="text-center mb-3 sm:mb-4">
                         <h1
-                            class="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300 mb-2">
+                            class="text-3xl sm:text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300 mb-2">
                             404zero</h1>
-                        <p class="text-xl md:text-2xl text-gray-200 italic max-w-md mx-auto">
+                        <p class="text-lg sm:text-xl md:text-2xl text-gray-200 italic max-w-md mx-auto">
                             "探索未知，创造可能，永不停止学习的脚步"
                         </p>
                     </div>
 
                     <!-- 装饰元素 -->
-                    <div class="mt-10 flex justify-center">
+                    <div class="mt-8 sm:mt-10 flex justify-center">
                         <div class="w-32 h-1 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
                     </div>
                 </div>
@@ -151,31 +183,32 @@
 
             <!-- 右侧功能区域 -->
             <div class="w-full lg:w-1/2">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <!-- 时间模块 -->
-                    <div class="acrylic rounded-2xl p-6 acrylic-hover">
-                        <div class="flex items-center mb-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                    <!-- 时间模块：调整移动端大小 -->
+                    <div class="acrylic rounded-2xl p-5 sm:p-6 acrylic-hover touch-friendly">
+                        <div class="flex items-center mb-3 sm:mb-4">
                             <i class="fa fa-clock-o text-primary text-xl mr-3"></i>
-                            <h3 class="text-xl font-semibold">当前时间</h3>
+                            <h3 class="text-lg sm:text-xl font-semibold">当前时间</h3>
                         </div>
-                        <div id="time-display" class="text-3xl md:text-4xl font-mono font-bold">--:--:--</div>
+                        <div id="time-display" class="text-3xl sm:text-4xl font-mono font-bold time-display-mobile">
+                            12:05:08</div>
                     </div>
 
-                    <!-- 日期模块 -->
-                    <div class="acrylic rounded-2xl p-6 acrylic-hover">
-                        <div class="flex items-center mb-4">
+                    <!-- 日期模块：调整移动端大小 -->
+                    <div class="acrylic rounded-2xl p-5 sm:p-6 acrylic-hover touch-friendly">
+                        <div class="flex items-center mb-3 sm:mb-4">
                             <i class="fa fa-calendar text-secondary text-xl mr-3"></i>
-                            <h3 class="text-xl font-semibold">当前日期</h3>
+                            <h3 class="text-lg sm:text-xl font-semibold">当前日期</h3>
                         </div>
-                        <div id="date-display" class="text-xl md:text-2xl">----年--月--日</div>
-                        <div id="weekday-display" class="text-lg text-gray-300 mt-1">星期--</div>
+                        <div id="date-display" class="text-lg sm:text-xl md:text-2xl">----年--月--日</div>
+                        <div id="weekday-display" class="text-base sm:text-lg text-gray-300 mt-1">星期--</div>
                     </div>
 
-                    <!-- 天气模块 -->
-                    <div class="acrylic rounded-2xl p-6 acrylic-hover">
-                        <div class="flex items-center mb-4">
+                    <!-- 天气模块：调整移动端大小 -->
+                    <div class="acrylic rounded-2xl p-5 sm:p-6 acrylic-hover touch-friendly">
+                        <div class="flex items-center mb-3 sm:mb-4">
                             <i class="fa fa-cloud text-accent text-xl mr-3"></i>
-                            <h3 class="text-xl font-semibold">兰州天气</h3>
+                            <h3 class="text-lg sm:text-xl font-semibold">兰州天气</h3>
                         </div>
                         <div class="flex items-center">
                             <div id="weather-icon" class="text-4xl mr-4">
@@ -183,16 +216,16 @@
                             </div>
                             <div>
                                 <div id="temperature" class="text-3xl font-bold">--°C</div>
-                                <div id="weather-description" class="text-gray-300">获取天气数据中</div>
+                                <div id="weather-description" class="text-gray-300 text-sm sm:text-base">获取天气数据中</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- B站链接 -->
-                    <div class="acrylic rounded-2xl p-6 acrylic-hover">
-                        <div class="flex items-center mb-4">
+                    <!-- B站链接：调整移动端大小 -->
+                    <div class="acrylic rounded-2xl p-5 sm:p-6 acrylic-hover touch-friendly">
+                        <div class="flex items-center mb-3 sm:mb-4">
                             <i class="fa fa-play-circle text-[#FB7299] text-xl mr-3"></i>
-                            <h3 class="text-xl font-semibold">B站主页</h3>
+                            <h3 class="text-lg sm:text-xl font-semibold">B站主页</h3>
                         </div>
                         <a href="https://space.bilibili.com/1890708787" target="_blank"
                             class="flex items-center text-gray-200 hover:text-white transition-colors">
@@ -201,11 +234,11 @@
                         </a>
                     </div>
 
-                    <!-- GitHub链接 -->
-                    <div class="acrylic rounded-2xl p-6 acrylic-hover">
-                        <div class="flex items-center mb-4">
+                    <!-- GitHub链接：调整移动端大小 -->
+                    <div class="acrylic rounded-2xl p-5 sm:p-6 acrylic-hover touch-friendly">
+                        <div class="flex items-center mb-3 sm:mb-4">
                             <i class="fa fa-github text-gray-300 text-xl mr-3"></i>
-                            <h3 class="text-xl font-semibold">GitHub</h3>
+                            <h3 class="text-lg sm:text-xl font-semibold">GitHub</h3>
                         </div>
                         <a href="https://github.com/LanXiYaa" target="_blank"
                             class="flex items-center text-gray-200 hover:text-white transition-colors">
@@ -214,11 +247,11 @@
                         </a>
                     </div>
 
-                    <!-- Steam链接 -->
-                    <div class="acrylic rounded-2xl p-6 acrylic-hover">
-                        <div class="flex items-center mb-4">
+                    <!-- Steam链接：调整移动端大小 -->
+                    <div class="acrylic rounded-2xl p-5 sm:p-6 acrylic-hover touch-friendly">
+                        <div class="flex items-center mb-3 sm:mb-4">
                             <i class="fa fa-steam text-[#171a21] text-xl mr-3"></i>
-                            <h3 class="text-xl font-semibold">Steam</h3>
+                            <h3 class="text-lg sm:text-xl font-semibold">Steam</h3>
                         </div>
                         <a href="https://steamcommunity.com/profiles/76561199186542923/" target="_blank"
                             class="flex items-center text-gray-200 hover:text-white transition-colors">
@@ -229,12 +262,12 @@
                 </div>
             </div>
         </div>
-
-        <!-- 页脚 -->
-        <footer class="mt-12 text-center text-gray-400 text-sm">
-            <p>© 2025 404zero. All rights reserved.</p>
-        </footer>
     </div>
+
+    <!-- 页脚移至最下端并适配移动端 -->
+    <footer class="page-footer text-center text-gray-400 text-xs sm:text-sm relative z-10 px-4">
+        <p>© 2025 404zero. All rights reserved.</p>
+    </footer>
 
     <script>
         // 更新时间显示
@@ -338,6 +371,11 @@
             bgImage.onload = function () {
                 document.body.style.opacity = '1';
             };
+
+            // 移动端窗口大小变化时重新布局
+            window.addEventListener('resize', function () {
+                // 可以在这里添加特定的响应式调整逻辑
+            });
         };
     </script>
 
